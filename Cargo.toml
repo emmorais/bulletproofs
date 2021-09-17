@@ -1,11 +1,6 @@
 [package]
 name = "bulletproofs"
-# Before doing a release:
-# - update version field 
-# - update html_root_url
-# - ensure yoloproofs was disabled in an atomic (revertable) commit
-# - update CHANGELOG
-version = "2.0.0"
+version = "1.0.1"
 authors = ["Cathie Yun <cathieyun@gmail.com>", 
            "Henry de Valence <hdevalence@hdevalence.ca>",
            "Oleg Andreev <oleganza@gmail.com>"]
@@ -13,35 +8,33 @@ readme = "README.md"
 license = "MIT"
 repository = "https://github.com/dalek-cryptography/bulletproofs"
 categories = ["cryptography"]
-keywords = ["cryptography", "crypto", "ristretto", "zero-knowledge", "bulletproofs"]
+keywords = ["cryptography", "ristretto", "zero-knowledge", "bulletproofs"]
 description = "A pure-Rust implementation of Bulletproofs using Ristretto"
-edition = "2018"
 
 [dependencies]
-curve25519-dalek = { version = "2", default-features = false, features = ["u64_backend", "nightly", "serde", "alloc"] }
-subtle = { version = "2", default-features = false }
-sha3 = { version = "0.8", default-features = false }
-digest = { version = "0.8", default-features = false }
-rand_core = { version = "0.5", default-features = false, features = ["alloc"] }
-rand = { version = "0.7", default-features = false, optional = true }
-byteorder = { version = "1", default-features = false }
-serde = { version = "1", default-features = false, features = ["alloc"] }
-serde_derive = { version = "1", default-features = false }
-thiserror = { version = "1", optional = true }
-merlin = { version = "2", default-features = false }
-clear_on_drop = { version = "0.2", default-features = false, features = ["nightly"] }
+curve25519-dalek = { version = "1", features = ["serde"] }
+subtle = "2"
+sha3 = "0.8"
+digest = "0.8"
+rand = "0.6"
+byteorder = "1"
+serde = "1"
+serde_derive = "1"
+failure = "0.1"
+merlin = "1"
+clear_on_drop = "0.2"
 
 [dev-dependencies]
 hex = "0.3"
-criterion = "0.3"
+criterion = "0.2"
 bincode = "1"
-rand_chacha = "0.2"
+rand_chacha = "0.1"
 
 [features]
-default = ["std", "avx2_backend"]
 avx2_backend = ["curve25519-dalek/avx2_backend"]
+# Disable the yoloproofs feature for the released crate, so that it's not possible for someone to publish a crate using R1CS proofs yet.
 # yoloproofs = []
-std = ["rand", "rand/std", "thiserror"]
+yoloproofs = []
 
 [[test]]
 name = "range_proof"
@@ -52,10 +45,6 @@ required-features = ["yoloproofs"]
 
 [[bench]]
 name = "range_proof"
-harness = false
-
-[[bench]]
-name = "generators"
 harness = false
 
 [[bench]]
